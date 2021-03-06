@@ -23,7 +23,7 @@ func createRandomTestCase(t *testing.T) Testcase {
 	require.NoError(t, err)
 	require.NotEmpty(t, tc)
 
-	require.NotZero(t, tc.Testcaseid)
+	require.NotZero(t, tc.ID)
 
 	return tc
 }
@@ -34,7 +34,7 @@ func TestCreateTestCase(t *testing.T) {
 
 func TestGetTestCase(t *testing.T) {
 	tc1 := createRandomTestCase(t)
-	tc2, err := testQueries.GetTestCase(context.Background(), tc1.Testcaseid)
+	tc2, err := testQueries.GetTestCase(context.Background(), tc1.ID)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, tc2)
@@ -48,10 +48,10 @@ func TestGetTestCase(t *testing.T) {
 
 func TestDeleteTestCase(t *testing.T) {
 	tc1 := createRandomTestCase(t)
-	err := testQueries.DeleteTestCase(context.Background(), tc1.Testcaseid)
+	err := testQueries.DeleteTestCase(context.Background(), tc1.ID)
 	require.NoError(t, err)
 
-	tc2, err := testQueries.GetTestCase(context.Background(), tc1.Testcaseid)
+	tc2, err := testQueries.GetTestCase(context.Background(), tc1.ID)
 	require.Error(t, err)
 	require.EqualError(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, tc2)

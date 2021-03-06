@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS testcases (
-	testcaseid bigserial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	classname varchar(255) NOT NULL,
 	filename varchar(255) NOT NULL,
 	linenumber integer NOT NULL,

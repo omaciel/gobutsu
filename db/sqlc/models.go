@@ -5,7 +5,7 @@ package db
 import ()
 
 type Testcase struct {
-	Testcaseid   int64   `json:"testcaseid"`
+	ID           int64   `json:"id"`
 	Classname    string  `json:"classname"`
 	Filename     string  `json:"filename"`
 	Linenumber   int32   `json:"linenumber"`

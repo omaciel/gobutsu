@@ -8,8 +8,8 @@ import (
 
 type Querier interface {
 	CreateTestCase(ctx context.Context, arg CreateTestCaseParams) (Testcase, error)
-	DeleteTestCase(ctx context.Context, testcaseid int64) error
-	GetTestCase(ctx context.Context, testcaseid int64) (Testcase, error)
+	DeleteTestCase(ctx context.Context, id int64) error
+	GetTestCase(ctx context.Context, id int64) (Testcase, error)
 	ListTestCases(ctx context.Context, arg ListTestCasesParams) ([]Testcase, error)
 }
 

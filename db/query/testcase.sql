@@ -11,14 +11,14 @@ INSERT INTO testcases (
 
 -- name: GetTestCase :one
 SELECT * FROM testcases
-WHERE testcaseid = $1 LIMIT 1;
+WHERE id = $1 LIMIT 1;
 
 -- name: ListTestCases :many
 SELECT * FROM testcases
-ORDER BY testcaseid
+ORDER BY id
 LIMIT $1
 OFFSET $2;
 
 -- name: DeleteTestCase :exec
 DELETE FROM testcases
-WHERE testcaseid = $1;
+WHERE id = $1;

@@ -16,7 +16,7 @@ INSERT INTO testcases (
   duration
 ) VALUES (
   $1, $2, $3, $4, $5
-) RETURNING testcaseid, classname, filename, linenumber, testcasename, duration
+) RETURNING id, classname, filename, linenumber, testcasename, duration
 `
 
 type CreateTestCaseParams struct {
@@ -37,7 +37,7 @@ func (q *Queries) CreateTestCase(ctx context.Context, arg CreateTestCaseParams) 
 	)
 	var i Testcase
 	err := row.Scan(
-		&i.Testcaseid,
+		&i.ID,
 		&i.Classname,
 		&i.Filename,
 		&i.Linenumber,
@@ -49,24 +49,24 @@ func (q *Queries) CreateTestCase(ctx context.Context, arg CreateTestCaseParams) 
 
 const deleteTestCase = `-- name: DeleteTestCase :exec
 DELETE FROM testcases
-WHERE testcaseid = $1
+WHERE id = $1
 `
 
-func (q *Queries) DeleteTestCase(ctx context.Context, testcaseid int64) error {
-	_, err := q.db.ExecContext(ctx, deleteTestCase, testcaseid)
+func (q *Queries) DeleteTestCase(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteTestCase, id)
 	return err
 }
 
 const getTestCase = `-- name: GetTestCase :one
-SELECT testcaseid, classname, filename, linenumber, testcasename, duration FROM testcases
-WHERE testcaseid = $1 LIMIT 1
+SELECT id, classname, filename, linenumber, testcasename, duration FROM testcases
+WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetTestCase(ctx context.Context, testcaseid int64) (Testcase, error) {
-	row := q.db.QueryRowContext(ctx, getTestCase, testcaseid)
+func (q *Queries) GetTestCase(ctx context.Context, id int64) (Testcase, error) {
+	row := q.db.QueryRowContext(ctx, getTestCase, id)
 	var i Testcase
 	err := row.Scan(
-		&i.Testcaseid,
+		&i.ID,
 		&i.Classname,
 		&i.Filename,
 		&i.Linenumber,
@@ -77,8 +77,8 @@ func (q *Queries) GetTestCase(ctx context.Context, testcaseid int64) (Testcase, 
 }
 
 const listTestCases = `-- name: ListTestCases :many
-SELECT testcaseid, classname, filename, linenumber, testcasename, duration FROM testcases
-ORDER BY testcaseid
+SELECT id, classname, filename, linenumber, testcasename, duration FROM testcases
+ORDER BY id
 LIMIT $1
 OFFSET $2
 `
@@ -98,7 +98,7 @@ func (q *Queries) ListTestCases(ctx context.Context, arg ListTestCasesParams) ([
 	for rows.Next() {
 		var i Testcase
 		if err := rows.Scan(
-			&i.Testcaseid,
+			&i.ID,
 			&i.Classname,
 			&i.Filename,
 			&i.Linenumber,

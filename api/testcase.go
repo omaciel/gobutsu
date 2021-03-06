@@ -41,7 +41,7 @@ func(server *Server) createTestCase(ctx *gin.Context) {
 }
 
 type getTestCaseRequest struct {
-	TestcaseID int64 `uri:"testcaseid" binding:"required,min=1"`
+	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
 func(server *Server) getTestCase(ctx *gin.Context) {
@@ -51,7 +51,7 @@ func(server *Server) getTestCase(ctx *gin.Context) {
 		return
 	}
 
-	testcase, err := server.app.GetTestCase(ctx, req.TestcaseID)
+	testcase, err := server.app.GetTestCase(ctx, req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
