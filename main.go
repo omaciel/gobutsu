@@ -7,25 +7,24 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/omaciel/gobutsu/api"
 	db "github.com/omaciel/gobutsu/db/sqlc"
-)
-
-const (
-	dbDriver = "postgres"
-	dbSource = "user=root password=secret host=localhost dbname=gobutsu sslmode=disable"
-	serverAddress = "0.0.0.0:8080"
+	"github.com/omaciel/gobutsu/util"
 )
 
 func main() {
-	var err error
-	conn, err := sql.Open(dbDriver, dbSource)
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+
+	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
 
 	app := db.NewApp(conn)
-	server := api.NewServer(app)
+	server := api.NewServer(config, app)
 
-	err = server.Start(serverAddress)
+	err = server.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatal("cannot start server:", err)
 	}

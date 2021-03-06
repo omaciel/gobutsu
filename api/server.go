@@ -3,17 +3,20 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	db "github.com/omaciel/gobutsu/db/sqlc"
+	"github.com/omaciel/gobutsu/util"
 )
 
 // Server serves HTTP requests
 type Server struct {
-	app *db.App
+	config util.Config
+	app    *db.App
 	router *gin.Engine
 }
 
 // NewServer creates a new HTTP server and setup routing
-func NewServer(app *db.App) *Server {
+func NewServer(config util.Config, app *db.App) *Server {
 	server := &Server{
+		config: config,
 		app:    app,
 	}
 	router := gin.Default()
