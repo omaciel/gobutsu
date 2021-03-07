@@ -1,12 +1,13 @@
 -- name: CreateTestCase :one
 INSERT INTO testcases (
+  username,
   classname,
   filename,
   linenumber,
   testcasename,
   duration
 ) VALUES (
-  $1, $2, $3, $4, $5
+  $1, $2, $3, $4, $5, $6
 ) RETURNING *;
 
 -- name: GetTestCase :one

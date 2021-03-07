@@ -9,10 +9,10 @@ import (
 
 // Constants for different generators
 const (
-	alphabet = "abcdefghijklmnopqrstuvwxyz"
-	GOLANG = ".go"
-	PYTHON = ".py"
-	JAVASCRIPT = ".js"
+	alphabet   = "abcdefghijklmnopqrstuvwxyz"
+	GOLANG     = "go"
+	PYTHON     = "py"
+	JAVASCRIPT = "js"
 )
 
 func init() {
@@ -67,4 +67,9 @@ func RandomFileName() string {
 	extensions := []string{GOLANG, JAVASCRIPT, PYTHON}
 	n := len(extensions)
 	return fmt.Sprintf("%s.%s", RandomString(6), extensions[rand.Intn(n)])
+}
+
+// RandomEmail generates a random email address
+func RandomEmail() string {
+	return fmt.Sprintf("%s@email.com", RandomString(6))
 }

@@ -2,7 +2,9 @@
 
 package db
 
-import ()
+import (
+	"time"
+)
 
 type Testcase struct {
 	ID           int64   `json:"id"`
@@ -11,4 +13,12 @@ type Testcase struct {
 	Linenumber   int32   `json:"linenumber"`
 	Testcasename string  `json:"testcasename"`
 	Duration     float64 `json:"duration"`
+	Username     string  `json:"username"`
+}
+
+type User struct {
+	Username       string    `json:"username"`
+	HashedPassword string    `json:"hashed_password"`
+	Email          string    `json:"email"`
+	CreatedOn      time.Time `json:"created_on"`
 }

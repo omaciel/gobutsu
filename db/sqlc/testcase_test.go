@@ -11,7 +11,10 @@ import (
 
 func createRandomTestCase(t *testing.T) Testcase {
 
+	user := createRandomUser(t)
+
 	arg := CreateTestCaseParams{
+		Username:     user.Username,
 		Classname:    util.RandomClassName(),
 		Filename:     util.RandomFileName(),
 		Linenumber:   util.RandomLineNumber(),
@@ -22,6 +25,8 @@ func createRandomTestCase(t *testing.T) Testcase {
 	tc, err := testQueries.CreateTestCase(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, tc)
+
+	require.Equal(t, tc.Username, user.Username)
 
 	require.NotZero(t, tc.ID)
 
@@ -62,8 +67,8 @@ func TestListTestCases(t *testing.T) {
 		createRandomTestCase(t)
 	}
 
-	arg := ListTestCasesParams {
-		Limit: 5,
+	arg := ListTestCasesParams{
+		Limit:  5,
 		Offset: 5,
 	}
 

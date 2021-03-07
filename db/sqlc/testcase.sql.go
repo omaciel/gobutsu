@@ -9,17 +9,19 @@ import (
 
 const createTestCase = `-- name: CreateTestCase :one
 INSERT INTO testcases (
+  username,
   classname,
   filename,
   linenumber,
   testcasename,
   duration
 ) VALUES (
-  $1, $2, $3, $4, $5
-) RETURNING id, classname, filename, linenumber, testcasename, duration
+  $1, $2, $3, $4, $5, $6
+) RETURNING id, classname, filename, linenumber, testcasename, duration, username
 `
 
 type CreateTestCaseParams struct {
+	Username     string  `json:"username"`
 	Classname    string  `json:"classname"`
 	Filename     string  `json:"filename"`
 	Linenumber   int32   `json:"linenumber"`
@@ -29,6 +31,7 @@ type CreateTestCaseParams struct {
 
 func (q *Queries) CreateTestCase(ctx context.Context, arg CreateTestCaseParams) (Testcase, error) {
 	row := q.db.QueryRowContext(ctx, createTestCase,
+		arg.Username,
 		arg.Classname,
 		arg.Filename,
 		arg.Linenumber,
@@ -43,6 +46,7 @@ func (q *Queries) CreateTestCase(ctx context.Context, arg CreateTestCaseParams) 
 		&i.Linenumber,
 		&i.Testcasename,
 		&i.Duration,
+		&i.Username,
 	)
 	return i, err
 }
@@ -58,7 +62,7 @@ func (q *Queries) DeleteTestCase(ctx context.Context, id int64) error {
 }
 
 const getTestCase = `-- name: GetTestCase :one
-SELECT id, classname, filename, linenumber, testcasename, duration FROM testcases
+SELECT id, classname, filename, linenumber, testcasename, duration, username FROM testcases
 WHERE id = $1 LIMIT 1
 `
 
@@ -72,12 +76,13 @@ func (q *Queries) GetTestCase(ctx context.Context, id int64) (Testcase, error) {
 		&i.Linenumber,
 		&i.Testcasename,
 		&i.Duration,
+		&i.Username,
 	)
 	return i, err
 }
 
 const listTestCases = `-- name: ListTestCases :many
-SELECT id, classname, filename, linenumber, testcasename, duration FROM testcases
+SELECT id, classname, filename, linenumber, testcasename, duration, username FROM testcases
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -104,6 +109,7 @@ func (q *Queries) ListTestCases(ctx context.Context, arg ListTestCasesParams) ([
 			&i.Linenumber,
 			&i.Testcasename,
 			&i.Duration,
+			&i.Username,
 		); err != nil {
 			return nil, err
 		}

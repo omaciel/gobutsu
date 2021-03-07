@@ -14,9 +14,10 @@ type createTestCaseRequest struct {
 	Linenumber   int32   `json:"linenumber"`
 	Testcasename string  `json:"testcasename" binding:"required"`
 	Duration     float64 `json:"duration"`
+	Username     string  `json:"username"`
 }
 
-func(server *Server) createTestCase(ctx *gin.Context) {
+func (server *Server) createTestCase(ctx *gin.Context) {
 	var req createTestCaseRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
@@ -24,6 +25,7 @@ func(server *Server) createTestCase(ctx *gin.Context) {
 	}
 
 	arg := db.CreateTestCaseParams{
+		Username:     req.Username,
 		Classname:    req.Classname,
 		Filename:     req.Filename,
 		Linenumber:   req.Linenumber,
@@ -44,7 +46,7 @@ type getTestCaseRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-func(server *Server) getTestCase(ctx *gin.Context) {
+func (server *Server) getTestCase(ctx *gin.Context) {
 	var req getTestCaseRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
@@ -66,11 +68,11 @@ func(server *Server) getTestCase(ctx *gin.Context) {
 }
 
 type listTestCaseRequest struct {
-	PageID int32 `form:"page_id" binding:"required,min=1"`
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
-func(server *Server) listTestCase(ctx *gin.Context) {
+func (server *Server) listTestCase(ctx *gin.Context) {
 	var req listTestCaseRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
@@ -79,7 +81,7 @@ func(server *Server) listTestCase(ctx *gin.Context) {
 
 	arg := db.ListTestCasesParams{
 		Limit:  req.PageSize,
-		Offset: (req.PageID -1) * req.PageSize,
+		Offset: (req.PageID - 1) * req.PageSize,
 	}
 
 	testcases, err := server.app.ListTestCases(ctx, arg)
