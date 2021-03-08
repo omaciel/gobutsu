@@ -6,22 +6,27 @@ import (
 	"fmt"
 )
 
-// App provides all functions to execute db queries and transactions
-type App struct {
+// App defines all functions to execute db queries and transactions
+type App interface {
+	Querier
+}
+
+// SQLApp provides all functions to execute SQL queries and transactions
+type SQLApp struct {
 	*Queries
 	db *sql.DB
 }
 
 // NewApp creates a new App
-func NewApp(db *sql.DB) *App {
-	return &App{
+func NewApp(db *sql.DB) App {
+	return &SQLApp{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // ExecTx executes a function within a database transaction
-func (app *App) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (app *SQLApp) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := app.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err

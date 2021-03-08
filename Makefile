@@ -16,6 +16,9 @@ migratedown:
 migratedown1:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/gobutsu?sslmode=disable" -verbose down 1
 
+mock:
+	mockgen --package mockdb --destination db/mock/app.go github.com/omaciel/gobutsu/db/sqlc App
+
 postgres:
 	docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:13-alpine
 
@@ -28,4 +31,4 @@ server:
 sqlc:
 	sqlc generate
 
-.PHONY: createdb dropdb migratedown migratedown1 migrateup migrateup1 postgres server sqlc test
+.PHONY: createdb dropdb migratedown migratedown1 migrateup migrateup1 mock postgres server sqlc test
