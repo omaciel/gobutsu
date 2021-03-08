@@ -21,6 +21,9 @@ func NewServer(config util.Config, app db.App) *Server {
 	}
 	router := gin.Default()
 
+	router.POST("/users", server.createUser)
+
+
 	router.POST("/testcases", server.createTestCase)
 	router.GET("/testcases/:id", server.getTestCase)
 	router.GET("/testcases/", server.listTestCase)
